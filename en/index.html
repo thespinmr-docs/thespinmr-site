@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>thespinMR Studio — Educational MRI acquisition simulator</title>
+  <meta name="description" content="thespinMR Studio: the educational MRI acquisition simulator for imaging students, radiographers and universities. Contrast, k-space, acquisition time and console parameters, in complete safety.">
+  <meta name="theme-color" content="#121212">
+  <link rel="alternate" hreflang="fr" href="https://thespinmr-docs.github.io/thespinmr-site/">
+  <link rel="alternate" hreflang="en" href="https://thespinmr-docs.github.io/thespinmr-site/en/">
+  <link rel="alternate" hreflang="es" href="https://thespinmr-docs.github.io/thespinmr-site/es/">
+  <link rel="alternate" hreflang="de" href="https://thespinmr-docs.github.io/thespinmr-site/de/">
+  <link rel="alternate" hreflang="it" href="https://thespinmr-docs.github.io/thespinmr-site/it/">
+  <link rel="alternate" hreflang="x-default" href="https://thespinmr-docs.github.io/thespinmr-site/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="thespinMR Studio — Master MRI acquisition in realistic conditions">
+  <meta property="og:description" content="The educational MRI acquisition simulator for students, radiographers and universities.">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <link rel="preload" href="../assets/fonts/Inter-Regular.woff" as="font" type="font/woff" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "thespinMR Studio",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Windows",
+    "description": "Educational MRI acquisition simulator for medical imaging students, radiographers and universities."
+  }
+  </script>
+
+  <!-- Tailwind CSS via CDN (version figée) -->
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink: '#121212', panel: '#1A1A1B', line: '#2A2A2C', soft: '#E0E0E0', mute: '#9AA7BD', accent: '#00DE8C' },
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'] }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url('../assets/fonts/Inter-Regular.woff') format('woff'); }
+    @font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url('../assets/fonts/Inter-SemiBold.woff') format('woff'); }
+    @font-face { font-family: 'Inter'; font-weight: 800; font-display: swap; src: url('../assets/fonts/Inter-ExtraBold.woff') format('woff'); }
+
+    :root { --ink:#121212; --panel:#1A1A1B; --line:#2A2A2C; --soft:#E0E0E0; --mute:#9AA7BD; --accent:#00DE8C; }
+    html { background: var(--ink); }
+    body { margin:0; background: var(--ink); color: var(--soft); font-family: Inter, ui-sans-serif, system-ui, 'Segoe UI', Roboto, Arial, sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color: inherit; }
+    img { max-width:100%; height:auto; }
+    h1,h2,h3 { color:#fff; line-height:1.12; letter-spacing:-0.02em; margin:0; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+
+    /* Fond du hero : halo + grille discrète */
+    .hero-bg {
+      background:
+        radial-gradient(60% 50% at 50% 0%, rgba(0,222,140,.16), transparent 70%),
+        radial-gradient(40% 40% at 85% 20%, rgba(58,134,255,.12), transparent 70%);
+    }
+    .grid-bg {
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(70% 60% at 50% 0%, #000 30%, transparent 100%);
+      mask-image: radial-gradient(70% 60% at 50% 0%, #000 30%, transparent 100%);
+    }
+
+    /* Boutons */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.8rem 1.35rem; border-radius:10px; font-weight:600; font-size:.95rem; text-decoration:none; transition:transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease; cursor:pointer; }
+    .btn-primary { background:var(--accent); color:#04110B; box-shadow:0 0 0 0 rgba(0,222,140,.0); }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 30px -6px rgba(0,222,140,.55); background:#17f0a0; }
+    .btn-ghost { border:1px solid #3A3A3D; color:#fff; background:rgba(255,255,255,.02); }
+    .btn-ghost:hover { border-color:var(--accent); background:rgba(0,222,140,.06); }
+
+    /* Cartes */
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01)); border:1px solid var(--line); border-radius:16px; }
+    .card:hover { border-color: rgba(0,222,140,.45); }
+    .badge { display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .8rem; border-radius:999px; border:1px solid rgba(0,222,140,.35); background:rgba(0,222,140,.08); color:var(--accent); font-size:.8rem; font-weight:600; }
+    .eyebrow { color:var(--accent); font-size:.78rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; }
+    .gradient-text { background:linear-gradient(90deg,#fff 20%, var(--accent) 120%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    /* Maquette de l'interface */
+    .app { background:#0E0E0F; border:1px solid #2F2F32; border-radius:14px; overflow:hidden; box-shadow:0 40px 120px -30px rgba(0,222,140,.25), 0 0 0 1px rgba(255,255,255,.03); }
+    .app-bar { display:flex; align-items:center; gap:.5rem; padding:.55rem .8rem; background:#161617; border-bottom:1px solid #26262A; }
+    .dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex:none; }
+    .app-tabs { display:flex; gap:.25rem; margin-left:1rem; font-size:.72rem; }
+    .app-tab { padding:.25rem .65rem; border-radius:6px; color:#8A8A90; }
+    .app-tab.on { background:#232326; color:#fff; }
+    .app-body { display:grid; grid-template-columns: 230px 1fr; }
+    @media (max-width: 760px) { .app-body { grid-template-columns: 1fr; } }
+    .console { background:#161617; border-right:1px solid #26262A; padding:.8rem; font-size:.74rem; }
+    .console h4 { margin:.2rem 0 .5rem; color:var(--accent); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; font-weight:600; }
+    .row { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.18rem 0; color:#B8B8BE; }
+    .spin { min-width:64px; text-align:right; background:#2A2A2C; border:1px solid #3A3A3D; border-radius:4px; padding:.1rem .45rem; color:#fff; font-variant-numeric:tabular-nums; }
+    .spin.hl { border-color:var(--accent); box-shadow:0 0 0 2px rgba(0,222,140,.18); }
+    .viewer { padding:.8rem; background:#0B0B0C; }
+    .tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; }
+    .tile { position:relative; background:#000; border:1px solid #26262A; border-radius:8px; overflow:hidden; }
+    .tile img { display:block; width:100%; aspect-ratio: 340/380; object-fit:cover; }
+    .tile span { position:absolute; left:.45rem; top:.4rem; font-size:.66rem; font-weight:600; color:#fff; background:rgba(0,0,0,.55); padding:.1rem .4rem; border-radius:4px; }
+    .tile small { position:absolute; left:.45rem; bottom:.4rem; font-size:.62rem; color:#9AE6C6; background:rgba(0,0,0,.55); padding:.05rem .35rem; border-radius:4px; }
+    .status { display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; margin-top:.7rem; font-size:.7rem; color:#8A8A90; }
+    .status b { color:#fff; font-weight:600; }
+
+    /* Tableau comparatif */
+    table.cmp { width:100%; border-collapse:collapse; font-size:.92rem; }
+    table.cmp th, table.cmp td { padding:.8rem 1rem; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+    table.cmp thead th { color:#fff; font-weight:600; border-bottom:1px solid #3A3A3D; }
+    table.cmp td:first-child { color:var(--soft); }
+    .yes { color:var(--accent); font-weight:600; }
+    .no { color:#6E6E75; }
+
+    details.faq { border-bottom:1px solid var(--line); padding:1rem 0; }
+    details.faq summary { cursor:pointer; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+    details.faq summary::-webkit-details-marker { display:none; }
+    details.faq summary::after { content:'+'; color:var(--accent); font-size:1.25rem; line-height:1; }
+    details.faq[open] summary::after { content:'–'; }
+    details.faq p { margin:.7rem 0 0; color:var(--mute); }
+
+    /* Apparition douce au défilement */
+    .reveal { opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto !important; } .btn { transition:none; } }
+    .skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#04110B; padding:.6rem 1rem; z-index:100; border-radius:0 0 8px 0; }
+    .skip:focus { left:0; }
+    [data-pending] { opacity:.92; }
+    #menu-mobile.hidden { display:none; }
+
+    /* Vidéo de démonstration */
+    .demo { position:relative; background:#0E0E0F; border:1px solid #2F2F32; border-radius:14px; overflow:hidden; box-shadow:0 40px 120px -30px rgba(0,222,140,.25), 0 0 0 1px rgba(255,255,255,.03); aspect-ratio:16/9; }
+    .demo-video { display:block; width:100%; height:100%; object-fit:cover; background:#0E0E0F; }
+    .demo-toggle { position:absolute; right:12px; bottom:12px; width:38px; height:38px; display:grid; place-items:center; border-radius:999px; border:1px solid rgba(255,255,255,.22); background:rgba(10,10,11,.7); color:#fff; cursor:pointer; backdrop-filter:blur(6px); transition:background .2s, border-color .2s; }
+    .demo-toggle:hover { border-color:var(--accent); background:rgba(0,222,140,.18); }
+  </style>
+</head>
+
+<body class="bg-ink text-soft font-sans antialiased">
+  <a class="skip" href="#contenu">Skip to content</a>
+
+  <!-- ============================== NAVBAR ============================== -->
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-ink/80 backdrop-blur-md">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3" aria-label="Main navigation">
+      <a href="#top" class="flex items-center gap-2.5 no-underline" aria-label="thespinMR Studio, home">
+        <img src="../assets/img/thespinmr_mark.png" width="32" height="32" alt="" class="h-8 w-8">
+        <span class="text-[1.05rem] font-extrabold tracking-tight text-white">thespin<span class="text-accent">MR</span> <span class="font-semibold text-mute">Studio</span></span>
+      </a>
+      <div class="hidden items-center gap-7 text-sm md:flex">
+        <a href="#fonctionnalites" class="text-mute no-underline transition hover:text-white">Features</a>
+        <a href="#ecoles" class="text-mute no-underline transition hover:text-white">For Schools</a>
+        <a href="https://thespinmr.gitbook.io/thespinmr-studio/en" target="_blank" rel="noopener" class="text-mute no-underline transition hover:text-white">Documentation&nbsp;↗</a>
+        <div class="flex items-center gap-1 text-xs" role="group" aria-label="Langue / Language"><a href="../" hreflang="fr" lang="fr" data-lang="fr" title="Français" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">FR</a><a href="../en/" hreflang="en" lang="en" data-lang="en" title="English" class="rounded px-1.5 py-0.5 no-underline bg-white/10 text-white" aria-current="page">EN</a><a href="../es/" hreflang="es" lang="es" data-lang="es" title="Español" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">ES</a><a href="../de/" hreflang="de" lang="de" data-lang="de" title="Deutsch" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">DE</a><a href="../it/" hreflang="it" lang="it" data-lang="it" title="Italiano" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">IT</a></div>
+        <a href="#telecharger" class="btn btn-primary !py-2 !text-sm">Download the trial version</a>
+      </div>
+      <button id="menu-btn" class="rounded-lg border border-line p-2 text-white md:hidden" aria-label="Open the menu" aria-expanded="false" aria-controls="menu-mobile">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </nav>
+    <div id="menu-mobile" class="hidden border-t border-white/5 px-5 pb-4 md:hidden">
+      <div class="flex flex-col gap-1 py-2 text-sm">
+        <a href="#fonctionnalites" class="py-2 text-soft no-underline">Features</a>
+        <a href="#ecoles" class="py-2 text-soft no-underline">For Schools</a>
+        <a href="https://thespinmr.gitbook.io/thespinmr-studio/en" target="_blank" rel="noopener" class="py-2 text-soft no-underline">Documentation ↗</a>
+        <div class="flex items-center gap-1 py-2 text-sm" role="group" aria-label="Langue / Language"><a href="../" hreflang="fr" lang="fr" data-lang="fr" title="Français" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">FR</a><a href="../en/" hreflang="en" lang="en" data-lang="en" title="English" class="rounded px-1.5 py-0.5 no-underline bg-white/10 text-white" aria-current="page">EN</a><a href="../es/" hreflang="es" lang="es" data-lang="es" title="Español" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">ES</a><a href="../de/" hreflang="de" lang="de" data-lang="de" title="Deutsch" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">DE</a><a href="../it/" hreflang="it" lang="it" data-lang="it" title="Italiano" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">IT</a></div>
+        <a href="#telecharger" class="btn btn-primary mt-2">Download the trial version</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <!-- ============================== HERO ============================== -->
+    <section id="top" class="hero-bg relative overflow-hidden">
+      <div class="grid-bg pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-5xl px-5 pb-10 pt-16 text-center md:pt-24">
+        <span class="badge reveal">🎓 Designed by medical imaging experts</span>
+        <h1 class="reveal mt-6 text-4xl font-extrabold sm:text-5xl md:text-6xl">
+          Master MRI physics and acquisition <span class="gradient-text">in realistic conditions.</span>
+        </h1>
+        <p class="reveal mx-auto mt-6 max-w-3xl text-base text-mute sm:text-lg">
+          The reference educational simulator for imaging students, radiographers and universities.
+          Experiment safely with k-space, contrast and console parameters.
+        </p>
+        <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#telecharger" class="btn btn-primary w-full sm:w-auto" data-site="telechargement">⬇ Download the free trial</a>
+          <a href="#ecoles" class="btn btn-ghost w-full sm:w-auto">Campus &amp; Institution offer</a>
+        </div>
+        <p class="reveal mt-4 text-xs text-mute">For Windows · Available in 5 languages · Free trial, no credit card · Full licence on purchase</p>
+      </div>
+
+      <!-- Aperçu / maquette -->
+      <div class="relative mx-auto max-w-5xl px-5 pb-20">
+        <figure class="reveal m-0">
+          <div class="demo">
+            <video id="demo-video" class="demo-video" width="1280" height="720" poster="../assets/video/demo-poster.jpg"
+                   autoplay muted loop playsinline preload="metadata"
+                   aria-label="Demonstration of thespinMR Studio: MRI parameters, learning challenges, 3D phantoms and oblique planes, resolution and k-space, sequence simulator and A/B comparator">
+              <source src="../assets/video/demo.mp4" type="video/mp4">
+              Your browser cannot play videos: <a href="../assets/video/demo.mp4">download the demonstration</a>.
+            </video>
+            <button type="button" id="demo-toggle" class="demo-toggle" aria-label="Pause the video" aria-pressed="false">
+              <svg id="ico-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+              <svg id="ico-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>
+            </button>
+          </div>
+          <figcaption class="mt-4 text-center text-sm text-mute">
+            Adjust the TR, the TE or the echo train: the image and the acquisition time are recalculated instantly. Real recording of the software.
+          </figcaption>
+        </figure>
+
+        <dl class="reveal mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-6 text-center md:grid-cols-4">
+          <div><dt class="text-xs text-mute">Learning challenges</dt><dd class="m-0 text-2xl font-extrabold text-white">53</dd></div>
+          <div><dt class="text-xs text-mute">Anatomical phantoms</dt><dd class="m-0 text-2xl font-extrabold text-white">6</dd></div>
+          <div><dt class="text-xs text-mute">Sequence families</dt><dd class="m-0 text-2xl font-extrabold text-white">SE · TSE · GRE</dd></div>
+          <div><dt class="text-xs text-mute">Image calculation</dt><dd class="m-0 text-2xl font-extrabold text-white">Live</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============================== 3 PILIERS ============================== -->
+    <section id="fonctionnalites" class="mx-auto max-w-6xl px-5 py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Features</p>
+        <h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Everything you need to understand why the image changes</h2>
+        <p class="mt-4 text-mute">Three pillars to go from theory to practice, without tying up a scanner.</p>
+      </div>
+
+      <div class="mt-12 grid gap-5 md:grid-cols-3">
+        <article class="card reveal p-7">
+          <div class="mb-4 text-3xl" aria-hidden="true">🔬</div>
+          <h3 class="text-xl font-semibold">Real Bloch physics</h3>
+          <p class="mt-3 text-sm text-mute">Images are calculated from the T1 and T2 relaxation equations and the proton density of each tissue: the contrast reacts to your settings just as it does on the machine.</p>
+          <ul class="mt-5 space-y-2 text-sm">
+            <li class="flex gap-2"><span class="yes">✓</span><span>T1, T2, PD and T2* weighting</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>Acquisition time, SNR and voxel size</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>Spin echo, turbo spin echo and gradient echo</span></li>
+          </ul>
+        </article>
+
+        <article class="card reveal p-7">
+          <div class="mb-4 text-3xl" aria-hidden="true">🖥️</div>
+          <h3 class="text-xl font-semibold">Ergonomic console interface</h3>
+          <p class="mt-3 text-sm text-mute">Parameters are organised as on a scanner console: slice geometry, field of view, contrast, resolution. The reflexes you build here carry over to the operator's console.</p>
+          <ul class="mt-5 space-y-2 text-sm">
+            <li class="flex gap-2"><span class="yes">✓</span><span>All settings visible on a single screen</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>Oblique slices by dragging on the localisers</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>DICOM viewer and multiplanar reformatting</span></li>
+          </ul>
+        </article>
+
+        <article class="card reveal p-7">
+          <div class="mb-4 text-3xl" aria-hidden="true">🎓</div>
+          <h3 class="text-xl font-semibold">Advanced teaching tools</h3>
+          <p class="mt-3 text-sm text-mute">The software explains what it does: every setting comes with its impact on contrast, time and artefacts, and is then practised through progressive challenges.</p>
+          <ul class="mt-5 space-y-2 text-sm">
+            <li class="flex gap-2"><span class="yes">✓</span><span>Impact coach: the effect of each parameter explained</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>A/B comparator of two protocols</span></li>
+            <li class="flex gap-2"><span class="yes">✓</span><span>53 clinical challenges, progress and history</span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================== ESSAI / LICENCE ============================== -->
+    <section id="telecharger" class="border-y border-white/5 bg-panel/60">
+      <div class="mx-auto max-w-5xl px-5 py-20">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="eyebrow">Download</p>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">Try it for free, upgrade to the full licence whenever you like</h2>
+          <p class="mt-4 text-mute">The trial version lets you manipulate contrast live on the brain phantom. The full licence unlocks the whole console.</p>
+        </div>
+
+        <div class="card reveal mt-10 overflow-x-auto p-2 sm:p-4">
+          <table class="cmp">
+            <thead><tr><th scope="col">Feature</th><th scope="col">Trial version</th><th scope="col">Full licence</th></tr></thead>
+            <tbody>
+              <tr><td>Brain phantom, live contrast (TR, TE)</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Spin echo, matrix, slice thickness, field of view, orientation</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Learning challenges</td><td>10 challenges</td><td class="yes">53 challenges</td></tr>
+              <tr><td>Gradient echo (GRE / FLASH)</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Echo train, parallel acceleration, bandwidth, averages, fat saturation</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Phase encoding, oversampling, oblique slices</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Knee, abdomen, pelvis and spine phantoms</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Image export, no watermark</td><td class="no">—</td><td class="yes">✓</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="reveal mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#contact" class="btn btn-primary w-full sm:w-auto" data-site="telechargement">⬇ Download the trial version</a>
+          <a href="#contact" class="btn btn-ghost w-full sm:w-auto" data-site="achat">Buy a licence</a>
+        </div>
+        <p class="mt-4 text-center text-xs text-mute" id="note-telechargement">Windows 10 / 11 · Online licence activation, then offline use is possible.</p>
+      </div>
+    </section>
+
+    <!-- ============================== B2B / ÉCOLES ============================== -->
+    <section id="ecoles" class="mx-auto max-w-6xl px-5 py-20">
+      <div class="grid items-center gap-10 md:grid-cols-2">
+        <div class="reveal">
+          <p class="eyebrow">Schools, institutes &amp; universities</p>
+          <h2 class="mt-3 text-3xl font-extrabold sm:text-4xl">A licence designed for institutions</h2>
+          <p class="mt-4 text-mute">Equip a room, a class or a whole campus. No need to pay by credit card: purchasing works like any other teaching supply.</p>
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href="#contact" class="btn btn-primary" data-site="devis">Request an institutional quote</a>
+            <a href="https://thespinmr.gitbook.io/thespinmr-studio/en" target="_blank" rel="noopener" class="btn btn-ghost">Read the documentation&nbsp;↗</a>
+          </div>
+        </div>
+
+        <ul class="reveal m-0 grid list-none gap-4 p-0">
+          <li class="card flex gap-4 p-5"><span class="text-2xl" aria-hidden="true">🧾</span><div><h3 class="text-base font-semibold">Purchase on administrative invoice</h3><p class="mt-1 text-sm text-mute">Quote, purchase order and administrative payment. Invoicing compatible with public-sector procurement (Chorus Pro in France).</p></div></li>
+          <li class="card flex gap-4 p-5"><span class="text-2xl" aria-hidden="true">🏫</span><div><h3 class="text-base font-semibold">Site licences</h3><p class="mt-1 text-sm text-mute">A number of seats suited to your practical-work rooms and student numbers, with the option to reassign a seat to another computer.</p></div></li>
+          <li class="card flex gap-4 p-5"><span class="text-2xl" aria-hidden="true">🔒</span><div><h3 class="text-base font-semibold">Closed networks supported</h3><p class="mt-1 text-sm text-mute">For rooms without internet access, activation by a licence file tied to each computer.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================== FAQ ============================== -->
+    <section class="mx-auto max-w-3xl px-5 pb-20">
+      <h2 class="reveal text-center text-3xl font-extrabold">Frequently asked questions</h2>
+      <div class="reveal mt-8">
+        <details class="faq"><summary>Which systems does thespinMR Studio run on?</summary><p>The software is available for Windows 10 and 11.</p></details>
+        <details class="faq"><summary>Is an internet connection required?</summary><p>The licence is activated online. It is then re-checked periodically, and the software remains usable offline for 30 days. For rooms without internet, an offline licence file is available.</p></details>
+        <details class="faq"><summary>Does the simulator replace a real scanner?</summary><p>No. It is a learning tool that helps you understand the effect of parameters before handling them on a machine. It replaces neither on-site training nor the manufacturer's instructions.</p></details>
+        <details class="faq"><summary>Can it be used for clinical purposes?</summary><p>No. thespinMR Studio is software for educational and academic purposes only, not intended for human clinical diagnosis or therapeutic planning.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================== FOOTER ============================== -->
+  <footer class="border-t border-white/5 bg-[#0E0E0F]">
+    <div class="mx-auto max-w-6xl px-5 py-12">
+      <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <img src="../assets/img/thespinmr_mark.png" width="28" height="28" alt="" class="h-7 w-7">
+            <span class="text-base font-extrabold text-white">thespin<span class="text-accent">MR</span> Studio</span>
+          </div>
+          <p class="mt-3 max-w-sm text-sm text-mute">The educational MRI acquisition simulator for students, radiographers and universities.</p>
+        </div>
+        <nav aria-label="Useful links">
+          <h3 class="text-sm font-semibold text-white">Resources</h3>
+          <ul class="m-0 mt-3 list-none space-y-2 p-0 text-sm">
+            <li><a class="text-mute no-underline hover:text-white" href="https://thespinmr.gitbook.io/thespinmr-studio/en" target="_blank" rel="noopener">Documentation</a></li>
+            <li><a class="text-mute no-underline hover:text-white" href="#fonctionnalites">Features</a></li>
+            <li><a class="text-mute no-underline hover:text-white" href="#ecoles">Institution offer</a></li>
+          </ul>
+        </nav>
+        <div id="contact">
+          <h3 class="text-sm font-semibold text-white">Contact &amp; support</h3>
+          <ul class="m-0 mt-3 list-none space-y-2 p-0 text-sm">
+            <li><a class="text-mute no-underline hover:text-white" href="#contact" data-site="contact" id="lien-contact">Write to us</a></li>
+            <li><a class="text-mute no-underline hover:text-white" href="../mentions-legales.html">Legal notice &amp; privacy (in French)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 rounded-xl border border-[#3A2F12] bg-[#1B160A] p-4 text-sm text-[#E8D9A8]" role="note">
+        <strong class="text-[#F5E6B0]">Disclaimer.</strong>
+        Software for educational and academic purposes only. Not intended for human clinical diagnosis or therapeutic planning.
+      </div>
+      <p class="mt-6 text-xs text-[#6E6E75]">© <span id="annee">2026</span> thespinMR. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ---------- À RENSEIGNER : liens réels (laissez vide tant qu'ils n'existent pas) ---------- */
+    const SITE = {
+      telechargement: "",   // ex. "https://github.com/votre-compte/thespinmr-releases/releases/latest" (lien du programme d'installation)
+      achat:          "",   // ex. page produit Lemon Squeezy : "https://votre-boutique.lemonsqueezy.com/buy/..."
+      contact:        "",   // ex. "mailto:contact@votre-domaine.fr"
+      devis:          ""    // ex. "mailto:contact@votre-domaine.fr?subject=Devis%20%C3%A9tablissement%20thespinMR"
+    };
+
+
+    /* Mémorise le choix de langue du visiteur (évite la redirection automatique) */
+    document.querySelectorAll('[data-lang]').forEach(function (a) {
+      a.addEventListener('click', function () { try { localStorage.setItem('lang-site', a.dataset.lang); } catch (e) {} });
+    });
+
+    document.getElementById('annee').textContent = new Date().getFullYear();
+
+    /* Applique les liens ; sans valeur, le bouton reste inactif et ramène au contact. */
+    document.querySelectorAll('[data-site]').forEach(function (el) {
+      var lien = SITE[el.dataset.site];
+      if (lien) {
+        el.setAttribute('href', lien);
+        if (/^https?:/.test(lien)) { el.setAttribute('rel', 'noopener'); }
+      } else {
+        el.setAttribute('data-pending', '');
+        el.setAttribute('title', 'Coming soon');
+      }
+    });
+
+    /* Vidéo de démonstration : pause manuelle ; pas de lecture automatique si l'utilisateur préfère moins d'animations */
+    (function () {
+      var v = document.getElementById('demo-video'), b = document.getElementById('demo-toggle');
+      if (!v || !b) return;
+      var pause = document.getElementById('ico-pause'), play = document.getElementById('ico-play');
+      function maj() {
+        var enPause = v.paused;
+        pause.style.display = enPause ? 'none' : ''; play.style.display = enPause ? '' : 'none';
+        b.setAttribute('aria-pressed', String(enPause));
+        b.setAttribute('aria-label', enPause ? 'Play the video' : 'Pause the video');
+      }
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+      b.addEventListener('click', function () { if (v.paused) { v.play(); } else { v.pause(); } });
+      v.addEventListener('play', maj); v.addEventListener('pause', maj); maj();
+    })();
+
+    /* Menu mobile */
+    (function () {
+      var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
+      btn.addEventListener('click', function () {
+        var ouvert = menu.classList.toggle('hidden') === false;
+        btn.setAttribute('aria-expanded', String(ouvert));
+      });
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { menu.classList.add('hidden'); btn.setAttribute('aria-expanded', 'false'); }); });
+    })();
+
+    /* Apparition douce au défilement (désactivée si l'utilisateur préfère moins d'animations) */
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        items.forEach(function (e) { e.classList.add('in'); }); return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { threshold: 0.12 });
+      items.forEach(function (e) { io.observe(e); });
+    })();
+  </script>
+</body>
+</html>

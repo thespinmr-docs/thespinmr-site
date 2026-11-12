@@ -6,6 +6,22 @@
   <title>thespinMR Studio — Simulateur pédagogique d'acquisition IRM</title>
   <meta name="description" content="thespinMR Studio : le simulateur pédagogique d'acquisition IRM pour les étudiants en imagerie, les manipulateurs et les universités. Contrastes, espace K, temps d'acquisition et paramètres console, en toute sécurité.">
   <meta name="theme-color" content="#121212">
+  <link rel="alternate" hreflang="fr" href="https://thespinmr-docs.github.io/thespinmr-site/">
+  <link rel="alternate" hreflang="en" href="https://thespinmr-docs.github.io/thespinmr-site/en/">
+  <link rel="alternate" hreflang="es" href="https://thespinmr-docs.github.io/thespinmr-site/es/">
+  <link rel="alternate" hreflang="de" href="https://thespinmr-docs.github.io/thespinmr-site/de/">
+  <link rel="alternate" hreflang="it" href="https://thespinmr-docs.github.io/thespinmr-site/it/">
+  <link rel="alternate" hreflang="x-default" href="https://thespinmr-docs.github.io/thespinmr-site/">
+  <script>
+    /* Redirige une seule fois vers la langue du navigateur, sauf si le visiteur a déjà choisi une langue. */
+    (function () {
+      try {
+        if (localStorage.getItem('lang-site') || location.hash) return;
+        var n = (navigator.language || 'fr').slice(0, 2).toLowerCase();
+        if (['en', 'es', 'de', 'it'].indexOf(n) > -1) { location.replace(n + '/'); }
+      } catch (e) {}
+    })();
+  </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="thespinMR Studio — Maîtrisez l'acquisition IRM en conditions réelles">
   <meta property="og:description" content="Le simulateur pédagogique d'acquisition IRM pour les étudiants, les manipulateurs et les universités.">
@@ -144,7 +160,8 @@
       <div class="hidden items-center gap-7 text-sm md:flex">
         <a href="#fonctionnalites" class="text-mute no-underline transition hover:text-white">Fonctionnalités</a>
         <a href="#ecoles" class="text-mute no-underline transition hover:text-white">Pour les Écoles</a>
-        <a href="https://thespinmr.gitbook.io/thespinmr-docs" target="_blank" rel="noopener" class="text-mute no-underline transition hover:text-white">Documentation&nbsp;↗</a>
+        <a href="https://thespinmr.gitbook.io/thespinmr-studio" target="_blank" rel="noopener" class="text-mute no-underline transition hover:text-white">Documentation&nbsp;↗</a>
+        <div class="flex items-center gap-1 text-xs" role="group" aria-label="Langue / Language"><a href="./" hreflang="fr" lang="fr" data-lang="fr" title="Français" class="rounded px-1.5 py-0.5 no-underline bg-white/10 text-white" aria-current="page">FR</a><a href="en/" hreflang="en" lang="en" data-lang="en" title="English" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">EN</a><a href="es/" hreflang="es" lang="es" data-lang="es" title="Español" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">ES</a><a href="de/" hreflang="de" lang="de" data-lang="de" title="Deutsch" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">DE</a><a href="it/" hreflang="it" lang="it" data-lang="it" title="Italiano" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">IT</a></div>
         <a href="#telecharger" class="btn btn-primary !py-2 !text-sm">Télécharger la version d'essai</a>
       </div>
       <button id="menu-btn" class="rounded-lg border border-line p-2 text-white md:hidden" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu-mobile">
@@ -155,7 +172,8 @@
       <div class="flex flex-col gap-1 py-2 text-sm">
         <a href="#fonctionnalites" class="py-2 text-soft no-underline">Fonctionnalités</a>
         <a href="#ecoles" class="py-2 text-soft no-underline">Pour les Écoles</a>
-        <a href="https://thespinmr.gitbook.io/thespinmr-docs" target="_blank" rel="noopener" class="py-2 text-soft no-underline">Documentation ↗</a>
+        <a href="https://thespinmr.gitbook.io/thespinmr-studio" target="_blank" rel="noopener" class="py-2 text-soft no-underline">Documentation ↗</a>
+        <div class="flex items-center gap-1 py-2 text-sm" role="group" aria-label="Langue / Language"><a href="./" hreflang="fr" lang="fr" data-lang="fr" title="Français" class="rounded px-1.5 py-0.5 no-underline bg-white/10 text-white" aria-current="page">FR</a><a href="en/" hreflang="en" lang="en" data-lang="en" title="English" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">EN</a><a href="es/" hreflang="es" lang="es" data-lang="es" title="Español" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">ES</a><a href="de/" hreflang="de" lang="de" data-lang="de" title="Deutsch" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">DE</a><a href="it/" hreflang="it" lang="it" data-lang="it" title="Italiano" class="rounded px-1.5 py-0.5 no-underline text-mute hover:text-white">IT</a></div>
         <a href="#telecharger" class="btn btn-primary mt-2">Télécharger la version d'essai</a>
       </div>
     </div>
@@ -178,7 +196,7 @@
           <a href="#telecharger" class="btn btn-primary w-full sm:w-auto" data-site="telechargement">⬇ Télécharger la version d'essai gratuite</a>
           <a href="#ecoles" class="btn btn-ghost w-full sm:w-auto">Offre Campus &amp; Établissements</a>
         </div>
-        <p class="reveal mt-4 text-xs text-mute">Pour Windows · Version d'essai gratuite, sans carte bancaire · Licence complète à l'achat</p>
+        <p class="reveal mt-4 text-xs text-mute">Pour Windows · Disponible en 5 langues · Version d'essai gratuite, sans carte bancaire · Licence complète à l'achat</p>
       </div>
 
       <!-- Aperçu / maquette -->
@@ -296,7 +314,7 @@
           <p class="mt-4 text-mute">Équipez une salle, une promotion ou tout un campus. Pas de carte bancaire à avancer : l'achat se fait comme n'importe quelle fourniture pédagogique.</p>
           <div class="mt-7 flex flex-col gap-3 sm:flex-row">
             <a href="#contact" class="btn btn-primary" data-site="devis">Demander un devis établissement</a>
-            <a href="https://thespinmr.gitbook.io/thespinmr-docs" target="_blank" rel="noopener" class="btn btn-ghost">Consulter la documentation&nbsp;↗</a>
+            <a href="https://thespinmr.gitbook.io/thespinmr-studio" target="_blank" rel="noopener" class="btn btn-ghost">Consulter la documentation&nbsp;↗</a>
           </div>
         </div>
 
@@ -334,7 +352,7 @@
         <nav aria-label="Liens utiles">
           <h3 class="text-sm font-semibold text-white">Ressources</h3>
           <ul class="m-0 mt-3 list-none space-y-2 p-0 text-sm">
-            <li><a class="text-mute no-underline hover:text-white" href="https://thespinmr.gitbook.io/thespinmr-docs" target="_blank" rel="noopener">Documentation</a></li>
+            <li><a class="text-mute no-underline hover:text-white" href="https://thespinmr.gitbook.io/thespinmr-studio" target="_blank" rel="noopener">Documentation</a></li>
             <li><a class="text-mute no-underline hover:text-white" href="#fonctionnalites">Fonctionnalités</a></li>
             <li><a class="text-mute no-underline hover:text-white" href="#ecoles">Offre établissements</a></li>
           </ul>
@@ -364,6 +382,12 @@
       contact:        "",   // ex. "mailto:contact@votre-domaine.fr"
       devis:          ""    // ex. "mailto:contact@votre-domaine.fr?subject=Devis%20%C3%A9tablissement%20thespinMR"
     };
+
+
+    /* Mémorise le choix de langue du visiteur (évite la redirection automatique) */
+    document.querySelectorAll('[data-lang]').forEach(function (a) {
+      a.addEventListener('click', function () { try { localStorage.setItem('lang-site', a.dataset.lang); } catch (e) {} });
+    });
 
     document.getElementById('annee').textContent = new Date().getFullYear();
 
